@@ -12,7 +12,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			url: "",
+			todosGatitos: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -23,7 +25,19 @@ const getState = ({ getStore, getActions, setStore }) => {
 				/**
 					fetch().then().then(data => setStore({ "foo": data.bar }))
 				*/
+				// la constante store me va a permitir obtener TODOS los elementos y valores del objeto strore
+				const store = getStore();
+				fetch("https://api.thecatapi.com/v1/images/search")
+					.then(response => response.json())
+					.then(result => {
+						//con setStore() yo modifico store en el campo que yo quiera con el valor recibido de la api
+						//si yo quiero modificar el campo url , entonces setStore({url:"valor"})
+						setStore({ url: result[0].url });
+						console.log(store.url);
+					})
+					.catch(error => console.log("errorcito", error));
 			},
+
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();
@@ -37,6 +51,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+
+			mandarGatitos: url => {
+				const store = getStore();
+				setStore({ todosGatitos: [...store.todosGatitos, url] });
 			}
 		}
 	};
